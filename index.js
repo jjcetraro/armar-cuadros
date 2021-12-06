@@ -4,14 +4,14 @@ main()
 
 function main(){
     const jugadores = getJugadores()
-    if(jugadores.length != 10){
-        console.log(`Se deben seleccionar exactamente 10 jugadores de la lista [seleccionados = ${jugadores.length}]`)
+    if(jugadores.length%2 !== 0 || jugadores.length > 14){
+        console.log(`Se debe seleccionar una cantidad par de jugadores, y no se puede seleccionar más de 14 jugadores [seleccionados = ${jugadores.length}]`)
         return
     }
     
     let mejorParidadEncontrada = 999999
-    for(let opcion = 0; opcion < Math.pow(2,10); opcion++){
-        if(!deja5JugadoresEnCadaCuadro(opcion)){
+    for(let opcion = 0; opcion < Math.pow(2,14); opcion++){
+        if(!dejaIgualCantDeJugadoresEnCadaCuadro(opcion, jugadores.length/2)){
             continue
         }
         const cuadros = getCuadros(jugadores, opcion)
@@ -44,7 +44,7 @@ function getPuntajeTotalCuadro(jugadores){
 }
 
 function getPuntajeTotalJugador(jugador){
-    return jugador.defensaPerimetral + jugador.defensaInterna + jugador.tiroExterior + jugador.ataqueInterior + jugador.contragolpe + jugador.pase
+    return jugador.defensaPerimetral + jugador.defensaInterna + jugador.tiroExterior*1.25 + jugador.ataqueInterior*1.25 + jugador.contragolpe*1.25 + jugador.pase*1.25
 }
 
 function imprimirOpcion(cuadroA, cuadroB, paridad){
@@ -86,7 +86,7 @@ function getCuadros(jugadores, opcion){
     return {cuadroA, cuadroB}
 }
 
-function deja5JugadoresEnCadaCuadro(opcion){
+function dejaIgualCantDeJugadoresEnCadaCuadro(opcion, cantJugadoresPorCuadro){
     const opcionBinario = opcion.toString(2)
     let cantCeros = 0
     let cantUnos = 0
@@ -94,7 +94,7 @@ function deja5JugadoresEnCadaCuadro(opcion){
         if(opcionBinario[i] === '0') cantCeros++
         else cantUnos++
     }
-    return cantCeros === 5 && cantUnos === 5
+    return cantCeros === cantJugadoresPorCuadro && cantUnos === cantJugadoresPorCuadro
 }
 
 function getJugadores(){
